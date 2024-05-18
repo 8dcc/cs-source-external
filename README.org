@@ -1,33 +1,35 @@
-#+title: Title
+#+title: Counter-Strike: Source external
 #+options: toc:nil
 #+startup: showeverything
 #+author: 8dcc
 
-#+begin_comment
-*TODO*: Change project-name and title
-*TODO*: Change output.out in Makefile
-#+end_comment
-
-*Short description.*
+*Counter-Strike: Source external cheat for GNU/Linux .*
 
 #+TOC: headlines 2
 
 * Description
 
-Long description.
+This is my first CS:S external cheat, inspired by [[https://github.com/yoshisaac/CounterStrikeSource-Linux-Trainer][yoshisaac's repository]].
 
 * Building
 
 #+begin_src console
-$ git clone https://github.com/8dcc/project-name
-$ cd project-name
+$ git clone https://github.com/8dcc/cs-source-external
+$ cd cs-source-external
 $ make
 ...
 #+end_src
 
 * Usage
 
+Since this program creates a transparent window for the overlay, you will need a
+[[https://en.wikipedia.org/wiki/Compositing_window_manager][compositor]]. Most modern desktop environments already provide one, but if yours
+doesn't (e.g. with [[https://dwm.suckless.org/][dwm]]), you will need to manually install and run it.
+
+Here is [[https://wiki.archlinux.org/title/Xorg#Composite][a list]] of compositors you can try, =picom= worked fine for me.
+
 #+begin_src console
-$ ./project-name.out --help
+$ picom &  # Depending on your DE/WM
+$ ./cs-source-external
 ...
 #+end_src
