@@ -3,7 +3,7 @@ CC=gcc
 CFLAGS=-Wall -Wextra
 LDFLAGS=-lX11 -lXext -lXfixes -lm
 
-OBJ_FILES=main.c.o
+OBJ_FILES=main.c.o window.c.o
 OBJS=$(addprefix obj/, $(OBJ_FILES))
 
 BIN=cs-source-external
