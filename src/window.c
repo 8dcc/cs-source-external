@@ -1,20 +1,15 @@
-#include <stdint.h>
 
 #include <stdint.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <limits.h>
 
-// TODO: Filter includes
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
-#include <X11/extensions/shape.h>
-#include <X11/extensions/Xcomposite.h>
-#include <X11/extensions/Xfixes.h>
-#include <X11/extensions/Xdbe.h> /* XdbeBackBuffer */
+#include <X11/extensions/shape.h>  /* XShapeCombineMask */
+#include <X11/extensions/Xfixes.h> /* XFixesCreateRegion */
+#include <X11/extensions/Xdbe.h>   /* XdbeBackBuffer */
 
 #include <math.h>
 
