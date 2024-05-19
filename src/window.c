@@ -31,11 +31,6 @@
     (CWColormap | CWBorderPixel | CWBackPixel | CWEventMask | CWWinGravity | \
      CWBitGravity | CWSaveUnder | CWDontPropagate | CWOverrideRedirect)
 
-#define WINDOW_X 400
-#define WINDOW_Y 400
-#define WINDOW_W 640
-#define WINDOW_H 480
-
 #define FONT_NAME "fixed"
 
 /*----------------------------------------------------------------------------*/
@@ -107,6 +102,55 @@ static void initDisplay(void) {
     }
 }
 
+#define INVALID_WINDOW 0
+static Window getWindowFromName(Window window, const char* name) {
+    char* cur_name;
+    XFetchName(ctx.disp, window, &cur_name);
+
+    if (cur_name != NULL && !strcmp(cur_name, name))
+        return window;
+
+    Window root, parent;
+    Window* children;
+    unsigned int num;
+    XQueryTree(ctx.disp, window, &root, &parent, &children, &num);
+
+    if (children == NULL)
+        return INVALID_WINDOW;
+
+    for (unsigned int i = 0; i < num; i++) {
+        Window ret = getWindowFromName(children[i], name);
+        if (ret != INVALID_WINDOW) {
+            XFree(children);
+            return ret;
+        }
+    }
+
+    XFree(children);
+    return INVALID_WINDOW;
+}
+
+#define CS_WINNAME "Counter-Strike Source - OpenGL"
+static void initWindowPosition(void) {
+    Window root = DefaultRootWindow(ctx.disp);
+
+    Window game = getWindowFromName(root, CS_WINNAME);
+    if (game == INVALID_WINDOW) {
+        fprintf(stderr, "Could not find a window with name: \"%s\".\n",
+                CS_WINNAME);
+        exit(1);
+    }
+
+    XWindowAttributes win_attr;
+    XGetWindowAttributes(ctx.disp, game, &win_attr);
+
+    /* Change position and size depending on the game's */
+    ctx.win_x = win_attr.x;
+    ctx.win_y = win_attr.y;
+    ctx.win_w = win_attr.width;
+    ctx.win_h = win_attr.height;
+}
+
 static void initWindow(void) {
     Window root = DefaultRootWindow(ctx.disp);
 
@@ -131,11 +175,17 @@ static void initWindow(void) {
     attr.override_redirect     = 1;
     attr.colormap              = colormap;
 
-    /* TODO: Change position and size depending on the game's */
-    ctx.win_x = WINDOW_X;
-    ctx.win_y = WINDOW_Y;
-    ctx.win_w = WINDOW_W;
-    ctx.win_h = WINDOW_H;
+    for (;;) {
+        initWindowPosition();
+        if (ctx.win_x >= 0 && ctx.win_y >= 0)
+            break;
+
+        fprintf(stderr,
+                "Could not get a valid position for \"%s\".\n"
+                "Press RET to retry...",
+                CS_WINNAME);
+        getchar();
+    }
 
     ctx.win = XCreateWindow(ctx.disp, root, ctx.win_x, ctx.win_y, ctx.win_w,
                             ctx.win_h, 0, vinfo.depth, InputOutput,
@@ -202,9 +252,18 @@ static void initFont(void) {
 
 void windowInit(void) {
     initDisplay();
+    printf("Display initialized. Default screen: %d, %dx%d.\n", ctx.screen_num,
+           ctx.disp_w, ctx.disp_h);
+
     initWindow();
+    printf("Window initialized. Pos: (%d,%d) Dimensions: %dx%d.\n", ctx.win_x,
+           ctx.win_y, ctx.win_w, ctx.win_h);
+
     initGraphicContext();
+    printf("Graphic Context initialized.\n");
+
     initFont();
+    printf("Font \"%s\" initialized.\n", FONT_NAME);
 }
 
 void windowEnd(void) {
