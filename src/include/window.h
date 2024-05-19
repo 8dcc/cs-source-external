@@ -3,6 +3,7 @@
 #define WINDOW_H_ 1
 
 #include <X11/Xlib.h>
+#include <X11/extensions/Xdbe.h> /* XdbeBackBuffer */
 
 typedef struct {
     /* Display */
@@ -13,6 +14,7 @@ typedef struct {
     /* Window */
     Window win;
     int win_x, win_y, win_w, win_h;
+    XdbeBackBuffer backbuf;
 
     /* Graphic Context */
     GC gc;
@@ -28,6 +30,7 @@ void draw();
 
 void windowInit(void);
 void windowEnd(void);
+void swapBuffers(void);
 void listFonts(void);
 
 #endif /* WINDOW_H_ */

@@ -14,6 +14,7 @@
 #include <X11/extensions/shape.h>
 #include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xfixes.h>
+#include <X11/extensions/Xdbe.h> /* XdbeBackBuffer */
 
 #include <math.h>
 
@@ -163,6 +164,15 @@ static void initWindow(void) {
     XFixesSetWindowShapeRegion(ctx.disp, ctx.win, ShapeInput, 0, 0, region);
     XFixesDestroyRegion(ctx.disp, region);
 
+    int major, minor;
+    if (!XdbeQueryExtension(ctx.disp, &major, &minor)) {
+        fprintf(stderr, "XDBE is not supported.\n");
+        exit(1);
+    }
+
+    /* Allocate the back buffer */
+    ctx.backbuf = XdbeAllocateBackBufferName(ctx.disp, ctx.win, 0);
+
     /* Show the window */
     XMapWindow(ctx.disp, ctx.win);
 }
@@ -195,21 +205,6 @@ static void initFont(void) {
 
 /*----------------------------------------------------------------------------*/
 
-/* TODO: Move to different source
- * FIXME: When using a global GC, this either flickers or the text does not
- * draw. */
-void draw() {
-    XClearWindow(ctx.disp, ctx.win);
-
-    XSetForeground(ctx.disp, ctx.gc, 0xFF555555);
-    XFillRectangle(ctx.disp, ctx.win, ctx.gc, 30, 30, 100, 18); /* x, y, w, h */
-
-    XSetForeground(ctx.disp, ctx.gc, 0xFFFFFFFF);
-
-    const char* str = "Hello, world.";
-    XDrawString(ctx.disp, ctx.win, ctx.gc, 42, 42, str, strlen(str));
-}
-
 void windowInit(void) {
     initDisplay();
     initWindow();
@@ -229,6 +224,32 @@ void windowEnd(void) {
 
     /* From initDisplay() */
     XCloseDisplay(ctx.disp);
+}
+
+/* TODO: Move to different source */
+void draw(void) {
+    /* Clear the back buffer */
+    XSetForeground(ctx.disp, ctx.gc, 0x00000000);
+    XFillRectangle(ctx.disp, ctx.backbuf, ctx.gc, 0, 0, ctx.win_w, ctx.win_h);
+
+    /* Rect: x, y, w, h */
+    XSetForeground(ctx.disp, ctx.gc, 0xFF555555);
+    XFillRectangle(ctx.disp, ctx.backbuf, ctx.gc, 30, 30, 100, 18);
+
+    XSetForeground(ctx.disp, ctx.gc, 0xFFFFFFFF);
+
+    const char* str = "Hello, world.";
+    XDrawString(ctx.disp, ctx.backbuf, ctx.gc, 42, 42, str, strlen(str));
+}
+
+void swapBuffers(void) {
+    /* Specify the window and action, and swap the front and back buffers.
+     * An implicit XFlush() is performed. */
+    XdbeSwapInfo swap_info = {
+        .swap_window = ctx.win,
+        .swap_action = XdbeUndefined,
+    };
+    XdbeSwapBuffers(ctx.disp, &swap_info, 1);
 }
 
 /* Use when needed */
