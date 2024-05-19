@@ -221,20 +221,9 @@ void windowEnd(void) {
     XCloseDisplay(ctx.disp);
 }
 
-/* TODO: Move to different source */
-void draw(void) {
-    /* Clear the back buffer */
+void clearBackBuffer(void) {
     XSetForeground(ctx.disp, ctx.gc, 0x00000000);
     XFillRectangle(ctx.disp, ctx.backbuf, ctx.gc, 0, 0, ctx.win_w, ctx.win_h);
-
-    /* Rect: x, y, w, h */
-    XSetForeground(ctx.disp, ctx.gc, 0xFF555555);
-    XFillRectangle(ctx.disp, ctx.backbuf, ctx.gc, 30, 30, 100, 18);
-
-    XSetForeground(ctx.disp, ctx.gc, 0xFFFFFFFF);
-
-    const char* str = "Hello, world.";
-    XDrawString(ctx.disp, ctx.backbuf, ctx.gc, 42, 42, str, strlen(str));
 }
 
 void swapBuffers(void) {
@@ -255,4 +244,16 @@ void listFonts(void) {
     char** fontlist = XListFonts(ctx.disp, "*", 1000, &num_fonts);
     for (int i = 0; i < num_fonts; ++i)
         fprintf(stderr, "> %s\n", fontlist[i]);
+}
+
+/*----------------------------------------------------------------------------*/
+
+void drawRect(int x, int y, int w, int h, uint64_t argb) {
+    XSetForeground(ctx.disp, ctx.gc, argb & 0xFFFFFFFF);
+    XFillRectangle(ctx.disp, ctx.backbuf, ctx.gc, x, y, w, h);
+}
+
+void drawString(int x, int y, uint64_t argb, const char* str) {
+    XSetForeground(ctx.disp, ctx.gc, argb & 0xFFFFFFFF);
+    XDrawString(ctx.disp, ctx.backbuf, ctx.gc, x, y, str, strlen(str));
 }

@@ -25,12 +25,13 @@ typedef struct {
 
 /*----------------------------------------------------------------------------*/
 
-/* TODO: Move to different source */
-void draw(void);
-
 void windowInit(void);
 void windowEnd(void);
+void clearBackBuffer(void);
 void swapBuffers(void);
 void listFonts(void);
+
+void drawRect(int x, int y, int w, int h, uint64_t argb);
+void drawString(int x, int y, uint64_t argb, const char* str);
 
 #endif /* WINDOW_H_ */
