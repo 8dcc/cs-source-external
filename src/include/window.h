@@ -26,7 +26,7 @@ typedef struct {
 /*----------------------------------------------------------------------------*/
 
 /* TODO: Move to different source */
-void draw();
+void draw(void);
 
 void windowInit(void);
 void windowEnd(void);

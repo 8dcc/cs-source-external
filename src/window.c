@@ -243,13 +243,15 @@ void draw(void) {
 }
 
 void swapBuffers(void) {
-    /* Specify the window and action, and swap the front and back buffers.
-     * An implicit XFlush() is performed. */
+    /* Specify the window and action, and swap the front and back buffers */
     XdbeSwapInfo swap_info = {
         .swap_window = ctx.win,
         .swap_action = XdbeUndefined,
     };
     XdbeSwapBuffers(ctx.disp, &swap_info, 1);
+
+    /* We need to perform an explicit XFlush() */
+    XFlush(ctx.disp);
 }
 
 /* Use when needed */
