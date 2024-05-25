@@ -6,6 +6,7 @@
 
 #include "include/window.h"
 #include "include/sdk.h"
+#include "include/player.h"
 #include "include/globals.h"
 #include "include/util.h"
 
@@ -52,8 +53,18 @@ void esp(void) {
         Player* player = g_playerList + (i * 0x140);
 
         getPlayerName(player, name);
+
+#if 0
+        /* FIXME: This doesn't really work, for some reason. Also tried using
+         * strncmp() */
         if (!strcmp(name, g_localName))
             continue;
+#endif
+
+        const int team           = getPlayerTeam(player);
+        const uint64_t box_color = (team == 2)   ? 0xFFFF0000
+                                   : (team == 3) ? 0xFF0000FF
+                                                 : 0xFF222222;
 
         const int health = getPlayerHealth(player);
         if (health <= 0)
@@ -74,7 +85,7 @@ void esp(void) {
 
         sprintf(health_str, "%d", health);
 
-        drawRect(x, y, w, h, 0xFFFF0000);
+        drawRect(x, y, w, h, box_color);
         drawString(x, y - 4, 0xFFFFFFFF, name);
         drawString(x, y - 16, 0xFFFFFFFF, health_str);
     }

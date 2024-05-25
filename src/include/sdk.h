@@ -3,7 +3,6 @@
 #define SDK_H_ 1
 
 #include <stdint.h>
-#include "globals.h"
 #include "util.h"
 
 /*----------------------------------------------------------------------------*/
@@ -13,6 +12,8 @@ typedef struct vec2_t {
 } vec2_t;
 
 /*----------------------------------------------------------------------------*/
+
+#define VEC_ZERO ((vec3_t){ 0, 0, 0 })
 
 typedef struct vec3_t {
     float x, y, z;
@@ -28,31 +29,5 @@ static inline bool vecIsZero(vec3_t x) {
 #define MAX_PLAYERS 64
 
 typedef void Player;
-
-static inline char* getPlayerName(Player* x, char* name) {
-    const int offset = 0x10;
-    void* addr       = (void*)((uintptr_t)x + offset);
-
-    readProcessMemory(g_pid, addr, name, MAX_NAME);
-    return name;
-}
-
-static inline int getPlayerHealth(Player* x) {
-    const int offset = 0x34;
-    void* addr       = (void*)((uintptr_t)x + offset);
-
-    int ret;
-    readProcessMemory(g_pid, addr, &ret, sizeof(ret));
-    return ret;
-}
-
-static inline vec3_t getPlayerPos(Player* x) {
-    const int offset = 0x38;
-    void* addr       = (void*)((uintptr_t)x + offset);
-
-    vec3_t ret;
-    readProcessMemory(g_pid, addr, &ret, sizeof(ret));
-    return ret;
-}
 
 #endif /* SDK_H_ */

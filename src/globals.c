@@ -1,6 +1,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "include/sdk.h"
 #include "include/util.h"
 
 #define OFFSET_PLAYERLIST 0xBE9380
@@ -8,10 +10,10 @@
 
 /*----------------------------------------------------------------------------*/
 
-int g_pid;
-char g_localName[100];
-void* g_playerList;
-void* g_viewMatrix;
+int g_pid          = 0;
+void* g_playerList = NULL;
+void* g_viewMatrix = NULL;
+char g_localName[MAX_NAME];
 
 /*----------------------------------------------------------------------------*/
 

@@ -2,10 +2,12 @@
 #ifndef GLOBALS_H_
 #define GLOBALS_H_ 1
 
+#include "sdk.h"
+
 extern int g_pid;
-extern char g_localName[100];
 extern void* g_playerList;
 extern void* g_viewMatrix;
+extern char g_localName[MAX_NAME];
 
 /*----------------------------------------------------------------------------*/
 
