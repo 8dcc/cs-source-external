@@ -31,7 +31,10 @@ void clearBackBuffer(void);
 void swapBuffers(void);
 void listFonts(void);
 
+void getWindowSize(int* w, int* h);
+
 void drawRect(int x, int y, int w, int h, uint64_t argb);
+void drawFillRect(int x, int y, int w, int h, uint64_t argb);
 void drawString(int x, int y, uint64_t argb, const char* str);
 
 #endif /* WINDOW_H_ */

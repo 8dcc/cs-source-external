@@ -14,6 +14,7 @@
 #include <math.h>
 
 #include "include/window.h"
+#include "include/util.h" /* ERR macro */
 
 /*----------------------------------------------------------------------------*/
 
@@ -51,7 +52,7 @@ static inline XColor rgb2xcolor(uint16_t r, uint16_t g, uint16_t b) {
 
     if (!XAllocColor(ctx.disp, DefaultColormap(ctx.disp, ctx.screen_num),
                      &color)) {
-        fprintf(stderr, "createXColorFromRGB: Cannot create color\n");
+        ERR("Cannot create color");
         exit(1);
     }
 
@@ -69,7 +70,7 @@ static inline XColor rgba2xcolor(uint16_t r, uint16_t g, uint16_t b,
 
     if (!XAllocColor(ctx.disp, DefaultColormap(ctx.disp, ctx.screen_num),
                      &color)) {
-        fprintf(stderr, "createXColorFromRGBA: Cannot create color\n");
+        ERR("Cannot create color");
         exit(1);
     }
 
@@ -87,7 +88,7 @@ static inline XColor rgba2xcolor(uint16_t r, uint16_t g, uint16_t b,
 static void initDisplay(void) {
     ctx.disp = XOpenDisplay(NULL);
     if (!ctx.disp) {
-        fprintf(stderr, "Failed to open X display\n");
+        ERR("Failed to open X display");
         exit(1);
     }
 
@@ -97,7 +98,7 @@ static void initDisplay(void) {
 
     int shape_event_base, shape_error_base;
     if (!XShapeQueryExtension(ctx.disp, &shape_event_base, &shape_error_base)) {
-        fprintf(stderr, "No shape extension in your system\n");
+        ERR("No shape extension in your system");
         exit(1);
     }
 }
@@ -136,8 +137,7 @@ static void initWindowPosition(void) {
 
     Window game = getWindowFromName(root, CS_WINNAME);
     if (game == INVALID_WINDOW) {
-        fprintf(stderr, "Could not find a window with name: \"%s\".\n",
-                CS_WINNAME);
+        ERR("Could not find a window with name: \"%s\".", CS_WINNAME);
         exit(1);
     }
 
@@ -191,7 +191,7 @@ static void initWindow(void) {
                             ctx.win_h, 0, vinfo.depth, InputOutput,
                             vinfo.visual, MY_WINDOW_MASK, &attr);
     if (!ctx.win) {
-        fprintf(stderr, "Failed to create X window.\n");
+        ERR("Failed to create X window.");
         exit(1);
     }
 
@@ -211,7 +211,7 @@ static void initWindow(void) {
 
     int major, minor;
     if (!XdbeQueryExtension(ctx.disp, &major, &minor)) {
-        fprintf(stderr, "XDBE is not supported.\n");
+        ERR("XDBE is not supported.");
         exit(1);
     }
 
@@ -240,7 +240,7 @@ static void initFont(void) {
     /* Load the main font */
     ctx.main_font = XLoadQueryFont(ctx.disp, FONT_NAME);
     if (!ctx.main_font) {
-        fprintf(stderr, "Could not find font \"%s\"\n", FONT_NAME);
+        ERR("Could not find font \"%s\"", FONT_NAME);
         exit(1);
     }
 
@@ -302,12 +302,24 @@ void listFonts(void) {
     int num_fonts;
     char** fontlist = XListFonts(ctx.disp, "*", 1000, &num_fonts);
     for (int i = 0; i < num_fonts; ++i)
-        fprintf(stderr, "> %s\n", fontlist[i]);
+        printf("> %s\n", fontlist[i]);
+}
+
+/*----------------------------------------------------------------------------*/
+
+void getWindowSize(int* w, int* h) {
+    *w = ctx.win_w;
+    *h = ctx.win_h;
 }
 
 /*----------------------------------------------------------------------------*/
 
 void drawRect(int x, int y, int w, int h, uint64_t argb) {
+    XSetForeground(ctx.disp, ctx.gc, argb & 0xFFFFFFFF);
+    XDrawRectangle(ctx.disp, ctx.backbuf, ctx.gc, x, y, w, h);
+}
+
+void drawFillRect(int x, int y, int w, int h, uint64_t argb) {
     XSetForeground(ctx.disp, ctx.gc, argb & 0xFFFFFFFF);
     XFillRectangle(ctx.disp, ctx.backbuf, ctx.gc, x, y, w, h);
 }

@@ -1,0 +1,81 @@
+
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "include/window.h"
+#include "include/sdk.h"
+#include "include/globals.h"
+#include "include/util.h"
+
+static bool WorldToScreen(const vec3_t in, vec2_t* out) {
+    static float vmatrix[4][4];
+
+    readProcessMemory(g_pid, g_viewMatrix, &vmatrix, sizeof(vmatrix));
+
+    float w = vmatrix[3][0] * in.x + vmatrix[3][1] * in.y +
+              vmatrix[3][2] * in.z + vmatrix[3][3];
+
+    if (w < 0.01f)
+        return false;
+
+    out->x = vmatrix[0][0] * in.x + vmatrix[0][1] * in.y +
+             vmatrix[0][2] * in.z + vmatrix[0][3];
+    out->y = vmatrix[1][0] * in.x + vmatrix[1][1] * in.y +
+             vmatrix[1][2] * in.z + vmatrix[1][3];
+    float invw = 1.0f / w;
+
+    out->x *= invw;
+    out->y *= invw;
+
+    int width, height;
+    getWindowSize(&width, &height);
+
+    float x = width / 2.0f;
+    float y = height / 2.0f;
+
+    x += 0.5f * out->x * width + 0.5f;
+    y -= 0.5f * out->y * height + 0.5f;
+
+    out->x = x;
+    out->y = y;
+
+    return true;
+}
+
+void esp(void) {
+    static char name[MAX_NAME];
+    static char health_str[20];
+
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        Player* player = g_playerList + (i * 0x140);
+
+        getPlayerName(player, name);
+        if (!strcmp(name, g_localName))
+            continue;
+
+        const int health = getPlayerHealth(player);
+        if (health <= 0)
+            continue;
+
+        const vec3_t pos = getPlayerPos(player);
+        if (vecIsZero(pos))
+            continue;
+
+        vec2_t scr;
+        if (!WorldToScreen(pos, &scr))
+            continue;
+
+        int x = scr.x - 10;
+        int y = scr.y - 10;
+        int w = 20;
+        int h = 20;
+
+        sprintf(health_str, "%d", health);
+
+        drawRect(x, y, w, h, 0xFFFF0000);
+        drawString(x, y - 4, 0xFFFFFFFF, name);
+        drawString(x, y - 16, 0xFFFFFFFF, health_str);
+    }
+}

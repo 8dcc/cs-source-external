@@ -3,20 +3,21 @@
 #include <stdio.h>
 #include <unistd.h> /* usleep */
 
-#define FPS 60
-
+#include "include/globals.h"
 #include "include/window.h"
+#include "include/esp.h"
 
-/*----------------------------------------------------------------------------*/
+#define FPS 144
 
 int main() {
+    globalsInit();
+
     windowInit();
 
     for (;;) {
         clearBackBuffer();
 
-        drawRect(30, 30, 100, 18, 0xFF555555);
-        drawString(42, 42, 0xFFFFFFFF, "Hello, world!");
+        esp();
 
         swapBuffers();
         usleep(1000 * 1000 / FPS);
