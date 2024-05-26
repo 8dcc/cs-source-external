@@ -78,10 +78,22 @@ void esp(void) {
         int w = 20;
         int h = 20;
 
-        sprintf(health_str, "%d", health);
-
+        /* Simple box ESP */
+        drawRect(x - 1, y - 1, w + 2, h + 2, 0xFF000000);
         drawRect(x, y, w, h, box_color);
+        drawRect(x + 1, y + 1, w - 2, h - 2, 0xFF000000);
+
+        /* Name and health number ESP */
+        sprintf(health_str, "%d", health);
         drawString(x, y - 4, 0xFFFFFFFF, name);
         drawString(x, y - 16, 0xFFFFFFFF, health_str);
+
+        /* Health bar */
+        x -= 6;
+        w               = 2;
+        const int bar_h = h * MIN(health, 100) / 100;
+        drawRect(x - 1, y - 1, w + 2, h + 2, 0xFF000000);
+        drawFillRect(x, y, w, h, 0xFFFF0000);
+        drawFillRect(x, y + h - bar_h, w, bar_h, 0xFF00FF00);
     }
 }

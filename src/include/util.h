@@ -27,6 +27,9 @@
 
 #define GET_OFFSET(BASE, OFFSET) ((void*)((uintptr_t)BASE) + OFFSET)
 
+#define MAX(A, B) ((A > B) ? A : B)
+#define MIN(A, B) ((A < B) ? A : B)
+
 /*----------------------------------------------------------------------------*/
 
 typedef struct ModuleBounds {
