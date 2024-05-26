@@ -53,13 +53,8 @@ void esp(void) {
         Player* player = g_playerList + (i * 0x140);
 
         getPlayerName(player, name);
-
-#if 0
-        /* FIXME: This doesn't really work, for some reason. Also tried using
-         * strncmp() */
         if (!strcmp(name, g_localName))
             continue;
-#endif
 
         const int team           = getPlayerTeam(player);
         const uint64_t box_color = (team == 2)   ? 0xFFFF0000

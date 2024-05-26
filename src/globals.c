@@ -17,6 +17,12 @@ char g_localName[MAX_NAME];
 
 /*----------------------------------------------------------------------------*/
 
+static inline void getLocalName(void) {
+    int c;
+    for (int i = 0; i < MAX_NAME && (c = getchar()) != '\n'; i++)
+        g_localName[i] = c;
+}
+
 void globalsInit(void) {
     /* Get PID of the game, for read/write operations */
     g_pid = pidof("hl2_linux");
@@ -49,5 +55,5 @@ void globalsInit(void) {
 
     /* TODO: Get local player pointer, filter with that in ESP */
     printf("Enter your in-game name: ");
-    fgets(g_localName, 100, stdin);
+    getLocalName();
 }
