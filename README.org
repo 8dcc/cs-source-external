@@ -30,6 +30,6 @@ Here is [[https://wiki.archlinux.org/title/Xorg#Composite][a list]] of composito
 
 #+begin_src console
 $ picom &  # Depending on your DE/WM
-$ ./cs-source-external
+$ sudo ./cs-source-external
 ...
 #+end_src
