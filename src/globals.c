@@ -5,9 +5,31 @@
 #include "include/sdk.h"
 #include "include/util.h"
 
-#define OFFSET_PLAYERLIST  0xBE9380
+/*
+ * Search for "CCSMapOverview", a function should look like this:
+ *
+ *     v0 = sub_669120(&dword_BEA600, "CCSMapOverview");
+ *     result = 0;
+ *     if ( dword_BE9380 )
+ *     {
+ *         if (...)
+ *         {
+ *             result = dword_BE9380;
+ *             if ( dword_BE9380 )
+ *                 return (*(*dword_BE9380 + 4))(dword_BE9380) == 1;
+ *         }
+ *     }
+ *
+ * The offset is that dword_BE9380.
+ */
+#define OFFSET_PLAYERLIST 0xBE9380
+
+/* CAchievementMgr::FireGameEvent() -> C_BasePlayer::GetLocalPlayer()
+ * See: https://8dcc.github.io/reversing/cs-source-localplayer.html */
 #define OFFSET_LOCALPLAYER 0xBD0750
-#define OFFSET_VIEWMATRIX  0xC7213C
+
+/* TODO */
+#define OFFSET_VIEWMATRIX 0xC7213C
 
 /*----------------------------------------------------------------------------*/
 

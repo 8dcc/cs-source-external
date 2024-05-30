@@ -25,6 +25,9 @@
         putchar('\n');                             \
     } while (0)
 
+#define VEC_PRINT(VEC) \
+    printf("%s: (%3.2f, %3.2f, %3.2f)\n", #VEC, (VEC).x, (VEC).y, (VEC).z)
+
 #define GET_OFFSET(BASE, OFFSET) ((void*)((uintptr_t)BASE) + OFFSET)
 
 #define MAX(A, B) ((A > B) ? A : B)
