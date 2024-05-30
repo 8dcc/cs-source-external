@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <stdio.h> /* printf() */
 #include <regex.h> /* regex_t */
 
 #define ERR(...)                           \

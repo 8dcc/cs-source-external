@@ -5,7 +5,7 @@
 
 #include "include/globals.h"
 #include "include/window.h"
-#include "include/esp.h"
+#include "include/features.h"
 
 #define FPS 144
 
@@ -18,6 +18,7 @@ int main() {
         clearBackBuffer();
 
         esp();
+        crosshair();
 
         swapBuffers();
         usleep(1000 * 1000 / FPS);

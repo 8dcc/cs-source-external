@@ -18,6 +18,9 @@
 
 /*----------------------------------------------------------------------------*/
 
+PLAYER_GETTER(int, Team, 0x30);
+PLAYER_GETTER(int, Health, 0x34);
+
 static inline char* getPlayerName(Player* x, char* name) {
     if (x == NULL)
         return NULL;
@@ -41,7 +44,18 @@ static inline vec3_t getPlayerPos(Player* x) {
     return ret;
 }
 
-PLAYER_GETTER(int, Team, 0x30);
-PLAYER_GETTER(int, Health, 0x34);
+static inline vec3_t getLocalPlayerAimPunch(void* x) {
+    if (x == NULL)
+        return VEC_ZERO;
+
+    /* See: https://github.com/8dcc/source-netvar-dumper */
+    const int offset = 0xE28;
+    void* addr       = (void*)((uintptr_t)x + offset);
+
+    vec3_t ret;
+    readProcessMemory(g_pid, addr, &ret, sizeof(vec3_t));
+    return ret;
+}
+
 
 #endif /* PLAYER_H_ */
