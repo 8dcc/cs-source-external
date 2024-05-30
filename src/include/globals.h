@@ -6,8 +6,8 @@
 
 extern int g_pid;
 extern void* g_playerList;
+extern void* g_localPlayer;
 extern void* g_viewMatrix;
-extern char g_localName[MAX_NAME];
 
 /*----------------------------------------------------------------------------*/
 

@@ -49,12 +49,8 @@ void esp(void) {
     static char name[MAX_NAME];
     static char health_str[20];
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (int i = 1; i < MAX_PLAYERS; i++) {
         Player* player = g_playerList + (i * 0x140);
-
-        getPlayerName(player, name);
-        if (!strcmp(name, g_localName))
-            continue;
 
         const int team           = getPlayerTeam(player);
         const uint64_t box_color = (team == 2)   ? 0xFFFF0000
@@ -72,6 +68,8 @@ void esp(void) {
         vec2_t scr;
         if (!WorldToScreen(pos, &scr))
             continue;
+
+        getPlayerName(player, name);
 
         int x = scr.x - 10;
         int y = scr.y - 10;
