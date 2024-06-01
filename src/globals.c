@@ -33,10 +33,11 @@
 
 /*----------------------------------------------------------------------------*/
 
-int g_pid           = 0;
-void* g_playerList  = NULL;
-void* g_localPlayer = NULL;
-void* g_viewMatrix  = NULL;
+int g_pid              = 0;
+void* g_playerList     = NULL;
+void* g_localPlayer    = NULL;
+void* g_localPlayerPtr = NULL;
+void* g_viewMatrix     = NULL;
 
 /*----------------------------------------------------------------------------*/
 
@@ -68,8 +69,6 @@ void globalsInit(void) {
     readProcessMemory(g_pid, playerList_ptr, &g_playerList, sizeof(void*));
     g_playerList += 0x28;
 
-    void* localPlayer_ptr = GET_OFFSET(client, OFFSET_LOCALPLAYER);
-    readProcessMemory(g_pid, localPlayer_ptr, &g_localPlayer, sizeof(void*));
-
-    g_viewMatrix = GET_OFFSET(engine, OFFSET_VIEWMATRIX);
+    g_localPlayerPtr = GET_OFFSET(client, OFFSET_LOCALPLAYER);
+    g_viewMatrix     = GET_OFFSET(engine, OFFSET_VIEWMATRIX);
 }

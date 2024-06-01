@@ -17,6 +17,10 @@ int main() {
     for (;;) {
         clearBackBuffer();
 
+        /* Each frame, get localPlayer */
+        readProcessMemory(g_pid, g_localPlayerPtr, &g_localPlayer,
+                          sizeof(void*));
+
         esp();
         crosshair();
 

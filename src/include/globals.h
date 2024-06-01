@@ -7,6 +7,7 @@
 extern int g_pid;
 extern void* g_playerList;
 extern void* g_localPlayer;
+extern void* g_localPlayerPtr;
 extern void* g_viewMatrix;
 
 /*----------------------------------------------------------------------------*/
