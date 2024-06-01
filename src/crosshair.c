@@ -25,13 +25,16 @@ static void drawCustomCrosshair(int x, int y, uint64_t col) {
 }
 
 void crosshair(void) {
-    /* Get window size */
+    /* Get window size, and center of the screen */
     int w, h;
     getWindowSize(&w, &h);
 
+    const int center_x = (w / 2) + 1;
+    const int center_y = (h / 2) + 1;
+
     /* Normal crosshair */
-    int x = w / 2;
-    int y = h / 2;
+    int x = center_x;
+    int y = center_y;
     drawCustomCrosshair(x, y, 0xFFFFFFFF);
 
     /* Aim punch crosshair */
@@ -40,6 +43,7 @@ void crosshair(void) {
     x -= (w / FOV) * aimPunch.y;
     y += (h / FOV) * aimPunch.x;
 
-    if ((x < w / 2 - 1 || x > w / 2 + 1) && (y < h / 2 - 1 || y > h / 2 + 1))
+    if ((x < center_x - 1 || x > center_x + 1) &&
+        (y < center_y - 1 || y > center_y + 1))
         drawCustomCrosshair(x, y, 0xFF00FF00);
 }
