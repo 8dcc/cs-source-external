@@ -67,8 +67,8 @@ void readProcessMemory(pid_t pid, void* addr, void* out, size_t sz) {
     remote[0].iov_len  = sz;
 
     if (process_vm_readv(pid, local, 1, remote, 1, 0) == -1) {
-        ERR("Error reading memory of process with ID %d. Errno: %d", pid,
-            errno);
+        ERR("Error reading memory of process with ID %d. Error: %s (%d)", pid,
+            strerror(errno), errno);
         exit(1);
     }
 }
