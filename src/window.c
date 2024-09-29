@@ -154,7 +154,7 @@ static void initWindowPosition(void) {
 static void initWindow(void) {
     Window root = DefaultRootWindow(ctx.disp);
 
-    /* Get display info, will be needed when creating the window bellow */
+    /* Get display info, will be needed when creating the window below */
     XVisualInfo vinfo;
     XMatchVisualInfo(ctx.disp, ctx.screen_num, 32, TrueColor, &vinfo);
 
